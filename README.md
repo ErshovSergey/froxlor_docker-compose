@@ -23,6 +23,9 @@ docker-compose down
 ``` 
 После сборки образа и запуска необходимо включить в настройка froxlor _"Use libnss-extrausers instead of libnss-mysql"_.
 
+### phpmyadmin
+ссылка для доступа к phpmyadmin
+[http://<domain>/froxlor/phpmyadmin/](http://<domain>/froxlor/phpmyadmin/)
 
 ### Для информации
 #### FTP сервер

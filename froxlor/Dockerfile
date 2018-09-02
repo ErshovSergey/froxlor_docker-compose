@@ -1,6 +1,4 @@
-#FROM debian:jessie
 FROM debian:stretch
-#FROM debian:9
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -39,8 +37,6 @@ RUN cd /tmp/ \
     bsd-mailx liblockfile-bin liblockfile1 \
     bsd-mailx liblockfile-bin liblockfile1 logrotate \
     apache2-suexec-pristine libapache2-mod-fcgid \
-#    libapparmor1 php7.0-fpm \
-#    libapparmor1 php-fpm php7.0-fpm \
     libapparmor1 php-fpm \
     nscd
 
@@ -51,7 +47,6 @@ RUN cd /tmp/ \
 #  && echo '{"distro":"stretch","http":"nginx","dns":"x","smtp":"x","mail":"x","ftp":"proftpd","system":["cron","libnssextrausers","logrotate","php-fpm"]}' > froxlor.json \
 #  && /var/www/froxlor/install/scripts/config-services.php --apply=froxlor.json --froxlor-dir=/var/www/froxlor/
 
-
 RUN cd /tmp/ \
 # extrausers
   && mkdir -p /var/lib/extrausers \
@@ -59,11 +54,6 @@ RUN cd /tmp/ \
   && touch /var/lib/extrausers/group \
   && touch /var/lib/extrausers/shadow \
   && chmod 640 /var/lib/extrausers/shadow \
-# cron froxlor
-  && echo "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin" > /etc/cron.d/froxlor \
-  && echo "* * * * *	root	/usr/bin/nice -n 5 /usr/bin/php -q /var/www/froxlor/scripts/froxlor_master_cronjob.php" >> /etc/cron.d/froxlor \
-  && chmod 0640 "/etc/cron.d/froxlor" \
-  && chown root:0 "/etc/cron.d/froxlor" \
 # Install PHPMyAdmin
   && (echo 'phpmyadmin phpmyadmin/dbconfig-install boolean true' | debconf-set-selections) \
   && (echo 'phpmyadmin phpmyadmin/app-password password root' | debconf-set-selections) \

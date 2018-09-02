@@ -1,0 +1,113 @@
+version: '2.1'
+networks:
+  app_net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+    ipam:
+      driver: default
+      config:
+      - subnet: 10.50.18.0/24
+        gateway: 10.50.18.254
+
+services:
+  mariadb-data:
+    image: busybox
+    container_name: "${DOMAIN_NAME}_mariadb-data"
+    volumes:
+      - "${DATA_PATH}/mariadb-data:/var/lib/mysql"
+
+  froxlor-data:
+    image: busybox
+    container_name: "${DOMAIN_NAME}_froxlor-data"
+    volumes:
+      - "${DATA_PATH}/customers:/var/customers"
+      - "${DATA_PATH}/mariadb-data:/var/lib/mysql"
+
+  froxlor:
+    environment:
+#      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+#      - GLPI_upload_max_filesize=${GLPI_upload_max_filesize}
+#      - GLPI_post_max_size=${GLPI_post_max_size}
+#      - GLPI_memory_limit=${GLPI_memory_limit}
+#      - GLPI_max_execution_time=${GLPI_max_execution_time}
+       - HTTP_SERVER=${HTTP_SERVER}
+    build:
+      context: .
+      dockerfile: froxlor/Dockerfile
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+    hostname: ${DOMAIN_NAME}
+    volumes_from:
+      - froxlor-data
+      - mariadb-data
+    container_name: "${DOMAIN_NAME}_froxlor"
+    ports:
+      -  "${HTTP_IP}:${HTTP_PORT}:80"
+      -  "${HTTP_IP}:${HTTPS_PORT}:443"
+      -  "${HTTP_IP}:${PORT_SFTP}:21"
+    depends_on:
+      - mariadb-data
+      - froxlor-data
+    restart: always
+    networks:
+      app_net:
+        ipv4_address: 10.50.18.1
+#    logging:
+#      driver: none
+
+
+#  glpi-data:
+#    image: busybox
+#    volumes: 
+#      - "${GLPI_PATH}/html:/var/www/html"
+#    container_name: "${GLPI_NAME}_glpi-data"
+
+#  glpi:
+#    environment:
+#      - GLPI_VERSION=${GLPI_VERSIONI}
+#      - GLPI_upload_max_filesize=${GLPI_upload_max_filesize}
+#      - GLPI_post_max_size=${GLPI_post_max_size}
+#      - GLPI_memory_limit=${GLPI_memory_limit}
+#      - GLPI_max_execution_time=${GLPI_max_execution_time}
+#    build:
+#      context: .
+#      dockerfile: glpi/Dockerfile
+#    hostname: glpi
+#    volumes_from:
+#      - glpi-data
+#    container_name: "${GLPI_NAME}_glpi"
+#    links:
+#      - mysql:mysql
+#    ports:
+#      -  "${GLPI_HTTP_IP_PORT}:80"
+#    depends_on:
+#      - mysql
+#      - glpi-data
+#    restart: always
+#    logging:
+#      driver: none
+
+#  bareos-fd:
+#    build:
+#      context: .
+#      dockerfile: bareos-fd/Dockerfile
+#    hostname: bareos-fd
+#    container_name: "${GLPI_NAME}_bareos-fd"
+#    volumes_from:
+#      - glpi-data:ro
+#    volumes:
+#      - "${GLPI_PATH}/client_bareos:/etc/bareos"
+#    links:
+#      - mysql:mysql
+#    ports:
+#      -  "192.168.100.240:9192:9102"
+#    depends_on:
+#      - mysql
+#      - glpi-data
+#    restart: always
+#    logging:
+#      driver: none
+
+
+    

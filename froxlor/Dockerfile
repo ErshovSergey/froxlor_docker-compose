@@ -25,7 +25,6 @@ RUN cd /tmp/ \
 
 RUN cd /tmp/ \
   && apt-get update -qqy \
-## включить в настройка froxlor "Use libnss-extrausers instead of libnss-mysql"
   && apt-get install -yqq froxlor cron php-mbstring php-bcmath php-xml php-zip libnss-extrausers \
     libnginx-mod-http-geoip libnginx-mod-http-image-filter \
     libnginx-mod-http-subs-filter libnginx-mod-http-upstream-fair \
@@ -34,20 +33,10 @@ RUN cd /tmp/ \
     apache2 apache2-data apache2-utils \
     php7.0-cgi \
     php-cgi php7.0-cgi \
-    bsd-mailx liblockfile-bin liblockfile1 \
     bsd-mailx liblockfile-bin liblockfile1 logrotate \
     apache2-suexec-pristine libapache2-mod-fcgid \
     libapparmor1 php-fpm \
-    nscd
-
-## создать актуальный файл froxlor.json можно командой
-## /var/www/froxlor/install/scripts/config-services.php --create --froxlor-dir=/var/www/froxlor/
-## источник https://github.com/Froxlor/Froxlor/issues/535
-#RUN cd /tmp/ \
-#  && echo '{"distro":"stretch","http":"nginx","dns":"x","smtp":"x","mail":"x","ftp":"proftpd","system":["cron","libnssextrausers","logrotate","php-fpm"]}' > froxlor.json \
-#  && /var/www/froxlor/install/scripts/config-services.php --apply=froxlor.json --froxlor-dir=/var/www/froxlor/
-
-RUN cd /tmp/ \
+    nscd \
 # extrausers
   && mkdir -p /var/lib/extrausers \
   && touch /var/lib/extrausers/passwd \
@@ -63,12 +52,17 @@ RUN cd /tmp/ \
   && (echo 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2' | debconf-set-selections) \
   && apt-get install -yqq phpmyadmin \
   && ln -s /usr/share/phpmyadmin /var/www/froxlor/ 
+
 RUN cd /tmp/ \
 # apache
   && sed -i -e "s|DocumentRoot /var/www/html|DocumentRoot /var/www|" /etc/apache2/sites-available/000-default.conf \
 # for debug
   && apt-get install -yqq nano telnet procps \
-  && echo "\nexport TERM=xterm" >> ~/.bashrc
+  && echo "\nexport TERM=xterm" >> ~/.bashrc \
+# удаляем лишнее
+  && apt-get autoremove -qqy \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* /tmp/*
 
 ENTRYPOINT /opt/entrypoint.sh
 

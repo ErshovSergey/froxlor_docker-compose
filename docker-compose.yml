@@ -26,12 +26,11 @@ services:
 
   froxlor:
     environment:
-#      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-#      - GLPI_upload_max_filesize=${GLPI_upload_max_filesize}
-#      - GLPI_post_max_size=${GLPI_post_max_size}
-#      - GLPI_memory_limit=${GLPI_memory_limit}
-#      - GLPI_max_execution_time=${GLPI_max_execution_time}
        - HTTP_SERVER=${HTTP_SERVER}
+       - TZ=${TIMEZONE} # offset = -08:00 / DST -07:00
+    command: >
+      sh -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && 
+      echo $TZ > /etc/timezone"
     build:
       context: .
       dockerfile: froxlor/Dockerfile

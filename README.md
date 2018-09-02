@@ -11,7 +11,7 @@ git clone https://DockerImage@bitbucket.org/DockerImage/froxlor_docker-compose.g
 ```
 ### Настройки
 Переходим в каталог. 
-Необходимые настройки делаются в файлах _.env_ и mysql.env
+Необходимые настройки делаются в файлах _.env_ и _mysql.env_.
 
 Команда для сборки контейнеров
 ```
@@ -21,20 +21,21 @@ docker-compose up --build -d
 ```
 docker-compose down
 ``` 
-После сборки образа и запуска необходимо включить в настройка froxlor "Use libnss-extrausers instead of libnss-mysql"
+После сборки образа и запуска необходимо включить в настройка froxlor _"Use libnss-extrausers instead of libnss-mysql"_.
 
 
 ### Для информации
 #### FTP сервер
-Для доступа к файлам используется sftp сервер, в качестве сервера proftpd настроенный по 
-[источник](https://forum.froxlor.org/index.php?/topic/12753-configuring-proftpd-to-act-as-sftp-server/)
+Для доступа к файлам используется sftp сервер, в качестве сервера proftpd настроенный по [источник](https://forum.froxlor.org/index.php?/topic/12753-configuring-proftpd-to-act-as-sftp-server/).
 Номер порта, на котором работает sftp сервер указывается в _.env_.
 
 #### http сервер
 По умолчанию используется в качестве http сервера используется сервер указанный в файле _.env_.
 В процессе запуска используется файл из froxlor _/var/www/froxlor/install/scripts/config-services.php_.
 Параметры для запуска можно создать командой
+```
 /var/www/froxlor/install/scripts/config-services.php --create --froxlor-dir=/var/www/froxlor/
+```
 [источник](https://github.com/Froxlor/Froxlor/issues/535)
 
 > Copyright (c) 2018 &lt;[ErshovSergey](http://github.com/ErshovSergey/)&gt;

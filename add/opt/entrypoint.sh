@@ -26,6 +26,14 @@ if [[  -z "`ls /var/lib/mysql`" ]]; then
   mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 fi
 
+  ### generate cert SSL
+  [ -f /etc/apache2/apache2.key ] || [ -f /etc/nginx/sites-enabled/nginx.pem ] || \
+    openssl req -x509 -newkey rsa:2048 \
+    -days 3650 -nodes \
+    -keyout /etc/apache2/apache2.key   \
+    -out /etc/nginx/nginx.pem \
+    -subj "/C=RU/ST=Some-City/O=Internet Didgits Ltd/CN=Froxlor"
+
 # добавляем в hosts домены из файлы /var/customers/domain_list.txt
 [ ! -f /var/customers/domain_list.txt ] || /opt/add_domain_in_hosts.sh
 

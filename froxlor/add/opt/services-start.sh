@@ -5,10 +5,12 @@ if [ "$HTTP_SERVER" == "nginx" ]; then
   update-rc.d apache2 disable
 
   update-rc.d nginx enable
-#  service nginx start
 #  service php-fcgi start
 
   /opt/change_http-server.sh /opt/froxlor-config_nginx.json
+  sed -i -e "/^http /a 	server_names_hash_bucket_size 256;" /etc/nginx/nginx.conf
+  service nginx restart
+
 fi
 
 if [ "$HTTP_SERVER" == "apache" ]; then
@@ -17,9 +19,10 @@ if [ "$HTTP_SERVER" == "apache" ]; then
   service php-fcgi stop
 
   update-rc.d apache2 enable
-#  service apache2 start
 
   /opt/change_http-server.sh /opt/froxlor-config_apache.json
+  sed -i -e "s|DocumentRoot /var/www/html|DocumentRoot /var/www|" /etc/apache2/sites-available/000-default.conf
+  service apache2 restart
 fi
 
 

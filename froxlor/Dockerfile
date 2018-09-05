@@ -5,26 +5,26 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN cd /tmp/ \
   && apt-get update -qqy \
   && apt-get upgrade -qqy \
-  && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
-  && echo "ru_RU.UTF-8 UTF-8" >> /etc/locale.gen \
-  && apt-get install -yqq  --no-install-recommends --no-install-suggests locales \
-  && echo "LANG=\"ru_RU.UTF-8\"" > /etc/default/locale \
-  && echo "LC_ALL=\"ru_RU.UTF-8\"" >> /etc/default/locale \
-  && locale-gen ru_RU.UTF-8 \
-  && export LANG=ru_RU.UTF-8 \
-  && locale-gen --purge ru_RU.UTF-8 en_US.UTF-8 
+# локаль
+  && apt-get install -yqq  --no-install-recommends --no-install-suggests locales apt-utils 
+
+ENV LANG='ru_RU.UTF-8' LANGUAGE='ru_RU.UTF-8' LC_ALL='ru_RU.UTF-8'
+RUN echo ru_RU.UTF-8 UTF-8 >> /etc/locale.gen && locale-gen
+# локаль
 
 RUN cd /tmp/ \
+## ключ для репозитория froxlor
   && apt-get install -yqq --no-install-recommends openssh-client \
   && /usr/bin/ssh-keygen -A \
-## ключ для репозитория froxlor
-  && apt-get install -my gnupg wget \
+  && apt-get install -my gnupg wget 
+RUN cd /tmp/ \
   && echo 'deb http://debian.froxlor.org stretch main' > /etc/apt/sources.list.d/froxlor.list \
   && apt-key adv --keyserver pool.sks-keyservers.net --recv-key FD88018B6F2D5390D051343FF6B4A8704F9E9BBC \
   && apt-get -qqy remove wget gnupg openssh-client 
 
 RUN cd /tmp/ \
   && apt-get update -qqy \
+# froxlor
   && apt-get install -yqq froxlor cron php-mbstring php-bcmath php-xml php-zip libnss-extrausers \
     libnginx-mod-http-geoip libnginx-mod-http-image-filter \
     libnginx-mod-http-subs-filter libnginx-mod-http-upstream-fair \
@@ -37,6 +37,7 @@ RUN cd /tmp/ \
     apache2-suexec-pristine libapache2-mod-fcgid \
     libapparmor1 php-fpm \
     nscd \
+# froxlor
 # extrausers
   && mkdir -p /var/lib/extrausers \
   && touch /var/lib/extrausers/passwd \
@@ -51,20 +52,19 @@ RUN cd /tmp/ \
   && (echo 'phpmyadmin phpmyadmin/mysql/app-pass password root' | debconf-set-selections) \
   && (echo 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2' | debconf-set-selections) \
   && apt-get install -yqq phpmyadmin \
-  && ln -s /usr/share/phpmyadmin /var/www/froxlor/ 
-
-RUN cd /tmp/ \
-# apache
-  && sed -i -e "s|DocumentRoot /var/www/html|DocumentRoot /var/www|" /etc/apache2/sites-available/000-default.conf \
-# for debug
-  && apt-get install -yqq nano telnet procps \
-  && echo "\nexport TERM=xterm" >> ~/.bashrc \
+  && ln -s /usr/share/phpmyadmin /var/www/froxlor/ \
 # удаляем лишнее
   && apt-get autoremove -qqy \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/*
 
+
+RUN cd /tmp/ \
+  && apt-get update -qqy \
+# for debug
+  && apt-get install -yqq nano telnet procps 
+#  && echo "\nexport TERM=xterm" >> ~/.bashrc 
+
 ENTRYPOINT /opt/entrypoint.sh
 
 COPY add/ /
-

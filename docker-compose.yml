@@ -22,6 +22,9 @@ services:
     environment:
        - HTTP_SERVER=${HTTP_SERVER}
        - "TZ=${TIMEZONE}"
+#       - LANGUAGE=ru_RU.UTF-8
+#       - LANG=ru_RU.UTF-8
+#       - LC_ALL=ru_RU.UTF-8
     build:
       context: ./froxlor/
       dockerfile: Dockerfile
@@ -41,8 +44,8 @@ services:
     networks:
       app_net:
         ipv4_address: 10.50.18.1
-    logging:
-      driver: none
+#    logging:
+#      driver: none
 
 
   bareos-fd:

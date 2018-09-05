@@ -26,8 +26,8 @@ if [[  -z "`ls /var/lib/mysql`" ]]; then
   mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 fi
 
-  ### generate cert SSL
-  [ -f /etc/apache2/apache2.key ] || [ -f /etc/nginx/sites-enabled/nginx.pem ] || \
+### сертификат для работа Let's encrypt
+[ -f /etc/apache2/apache2.key ] || [ -f /etc/nginx/sites-enabled/nginx.pem ] || \
     openssl req -x509 -newkey rsa:2048 \
     -days 3650 -nodes \
     -keyout /etc/apache2/apache2.key   \

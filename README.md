@@ -41,6 +41,11 @@ docker-compose down
 ```
 [источник](https://github.com/Froxlor/Froxlor/issues/535)
 
+### Дополнительные опции
+По мотивам https://debian.pro/726
+Для ограничения доступа к сайтам можно использовать опции nginx - geo. Для этого в файле /customers/ACL.conf прописываем переменную, которую потом можно использовать в правилах _Own vHost-settings:_.
+
+
 ### Полезные команды
 ```
 /usr/bin/php  /var/www/froxlor/scripts/froxlor_master_cronjob.php --force --letsencrypt --debug

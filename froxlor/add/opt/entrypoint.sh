@@ -37,6 +37,14 @@ fi
 # добавляем в hosts домены из файлы /var/customers/domain_list.txt
 [ ! -f /var/customers/domain_list.txt ] || /opt/add_domain_in_hosts.sh
 
+# файл для доменных имён в froxlor
+[ -f /var/customers/domain_list.txt ] || touch /var/customers/domain_list.txt
+
+# файл ACL для доступа к доменным именам
+touch /var/customers/ACL.conf ; \
+   ln -fs /var/customers/ACL.conf /etc/nginx/conf.d/ACL.conf ; 
+#   chown www-data:froxlorlocal /var/customers/ACL.conf
+
 service mysql start     && echo "  Start MySQL"
 service cron  start     && echo "  Start cron"
 
@@ -45,6 +53,8 @@ service cron  start     && echo "  Start cron"
 
 # для рестарта при наличии файла настроек
 /opt/froxlor_init.sh &
+
+chown -R froxlorlocal:froxlorlocal /var/customers/userdata.inc.php
 
 sleep infinity
 

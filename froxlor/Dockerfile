@@ -8,16 +8,16 @@ RUN cd /tmp/ \
 # локаль
   && apt-get install -yqq  --no-install-recommends --no-install-suggests locales apt-utils 
 
+# локаль
 ENV LANG='ru_RU.UTF-8' LANGUAGE='ru_RU.UTF-8' LC_ALL='ru_RU.UTF-8'
 RUN echo ru_RU.UTF-8 UTF-8 >> /etc/locale.gen && locale-gen
-# локаль
 
 RUN cd /tmp/ \
 ## ключ для репозитория froxlor
   && apt-get install -yqq --no-install-recommends openssh-client \
   && /usr/bin/ssh-keygen -A \
-  && apt-get install -my gnupg wget 
-RUN cd /tmp/ \
+  && apt-get install -my gnupg wget \
+#RUN cd /tmp/ \
   && echo 'deb http://debian.froxlor.org stretch main' > /etc/apt/sources.list.d/froxlor.list \
   && apt-key adv --keyserver pool.sks-keyservers.net --recv-key FD88018B6F2D5390D051343FF6B4A8704F9E9BBC \
   && apt-get -qqy remove wget gnupg openssh-client 
@@ -37,6 +37,8 @@ RUN cd /tmp/ \
     apache2-suexec-pristine libapache2-mod-fcgid \
     libapparmor1 php-fpm \
     nscd \
+    curl \
+    msmtp \
 # froxlor
 # extrausers
   && mkdir -p /var/lib/extrausers \

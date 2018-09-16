@@ -44,12 +44,57 @@ docker-compose down
 ### Дополнительные опции
 По мотивам https://debian.pro/726
 Для ограничения доступа к сайтам можно использовать опции nginx - geo. Для этого в файле /customers/ACL.conf прописываем переменную, которую потом можно использовать в правилах _Own vHost-settings:_.
+Этот файл будет использован nginx так, как если бы он находился в _/etc/nginx/conf.d/_.
 
 
-### Полезные команды
+### Полезные команды - запуская в образе
 ```
 /usr/bin/php  /var/www/froxlor/scripts/froxlor_master_cronjob.php --force --letsencrypt --debug
 ```
+### Органичение по ip адресу и по паролю
+#### Использование для перенаправления
+добавить в свойства домена в Own vHost-settings: 
+```
+#error_log /var/log/nginx/error1.log debug;
+
+rewrite ^(?!.FakeLocation) /FakeLocation$uri last;
+
+location ^~/FakeLocation/ {
+    satisfy any;
+
+    allow 192.168.XXX.XXX/24;
+    allow 1X5.XXX.X4.1/32;
+
+    deny  all;
+
+    auth_basic "Every day password required";
+    auth_basic_user_file /var/customers/webs/InProduction/glpi.itsmpro.ru/.htpasswd;
+    #error_log /var/log/nginx/error.log ;
+    #access_log /var/log/nginx/access.log;
+    proxy_pass   http://192.168.XXX.XXX:YY/;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $http_connection;
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+    proxy_set_header        X-Forwarded-Proto $scheme;
+    proxy_set_header X-Real-IP $remote_addr;
+}
+
+location ^~/FakeLocation/glpi/ {
+    #error_log /var/log/nginx/error.log ;
+    #access_log /var/log/nginx/access.log;
+    proxy_pass   http://192.168.XXX.XXX:YY/;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $http_connection;
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+    proxy_set_header        X-Forwarded-Proto $scheme;
+    proxy_set_header X-Real-IP $remote_addr;
+}
+```
+
 
 > Copyright (c) 2018 &lt;[ErshovSergey](http://github.com/ErshovSergey/)&gt;
 

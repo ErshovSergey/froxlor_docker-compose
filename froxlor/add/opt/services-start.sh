@@ -37,5 +37,5 @@ if [ "$HTTP_SERVER" == "apache" ]; then
 fi
 
 
-
+chown -R froxlorlocal:froxlorlocal /var/customers/userdata.inc.php
 

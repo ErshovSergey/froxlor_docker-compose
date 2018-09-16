@@ -26,6 +26,9 @@ if [[  -z "`ls /var/lib/mysql`" ]]; then
   mysql_install_db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
 fi
 
+### настройки для msmtp
+[ -f /var/customers/msmtprc ] || cp /var/customers/msmtprc.default /var/customers/msmtprc
+
 ### сертификат для работа Let's encrypt
 [ -f /etc/apache2/apache2.key ] || [ -f /etc/nginx/sites-enabled/nginx.pem ] || \
     openssl req -x509 -newkey rsa:2048 \
@@ -54,7 +57,6 @@ service cron  start     && echo "  Start cron"
 # для рестарта при наличии файла настроек
 /opt/froxlor_init.sh &
 
-chown -R froxlorlocal:froxlorlocal /var/customers/userdata.inc.php
 
 sleep infinity
 

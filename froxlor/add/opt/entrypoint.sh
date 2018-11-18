@@ -43,6 +43,13 @@ fi
 # файл для доменных имён в froxlor
 [ -f /var/customers/domain_list.txt ] || touch /var/customers/domain_list.txt
 
+# timezone
+if [ ! -z "$TZ" ];
+then
+  echo "Set timezone to $TZ";
+  sed -i -e "s|;date.timezone =*|date.timezone = $TZ |"           /etc/php/7.0/apache2/php.ini
+fi
+
 # файл ACL для доступа к доменным именам
 touch /var/customers/ACL.conf ; \
    ln -fs /var/customers/ACL.conf /etc/nginx/conf.d/ACL.conf ; 
@@ -51,12 +58,15 @@ touch /var/customers/ACL.conf ; \
 service mysql start     && echo "  Start MySQL"
 service cron  start     && echo "  Start cron"
 
+# bareos-fd
+[ ! -f /etc/bareos/bareos-fd.conf ] && cp /opt/bareos-fd.conf /etc/bareos/bareos-fd.conf
+service bareos-fd start && echo "  Start bareos-fd"
+
 # запуск сервисов
 /opt/services-start.sh
 
 # для рестарта при наличии файла настроек
 /opt/froxlor_init.sh &
-
 
 sleep infinity
 

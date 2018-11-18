@@ -4,7 +4,9 @@ if [ "$HTTP_SERVER" == "nginx" ]; then
   service apache2 stop
   update-rc.d apache2 disable
 
-  service php7.0-fpm stop
+#  service php7.0-fpm stop
+  service php7.2-fpm stop
+  service php5.6-fpm stop
   update-rc.d nginx enable
 #  service php-fcgi start
 
@@ -21,7 +23,10 @@ if [ "$HTTP_SERVER" == "nginx" ]; then
   sed -i -e "/^http /a	fastcgi_buffer_size 128k;" /etc/nginx/nginx.conf
 
   service nginx restart
-  service php7.0-fpm start
+  service php7.2-fpm start
+  service php5.6-fpm start
+
+#  service php7.0-fpm start
 fi
 
 if [ "$HTTP_SERVER" == "apache" ]; then
@@ -38,4 +43,5 @@ fi
 
 
 chown -R froxlorlocal:froxlorlocal /var/customers/userdata.inc.php
+
 

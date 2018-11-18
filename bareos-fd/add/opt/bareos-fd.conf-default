@@ -1,0 +1,21 @@
+FileDaemon {
+  Name = froxlor-fd
+  Maximum Concurrent Jobs = 1
+  Compatible = no 
+  Description = "Description for frolor"
+}
+
+#
+# List Directors who are permitted to contact this File daemon
+#
+Director {
+  Name = bareos-dir
+  Password = "PASSWORD_FOR_bareos-dis"
+}
+
+# Send all messages except skipped files back to Director
+Messages {
+  Name = Standard
+  director = srv6-dir = all, !skipped, !restored
+}
+

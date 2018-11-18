@@ -1,0 +1,16 @@
+# settings msmtp
+account smtp_server
+host            smtp.gmail.com
+from            sentmXXXXX@gmail.com
+user            sentmXXXXX@gmail.com
+password        ZZZZZZZZZZZ
+port            587
+auth            on
+tls             on
+tls_starttls    on
+tls_certcheck   off
+protocol        smtp
+
+
+# Set a default account
+account default : smtp_server

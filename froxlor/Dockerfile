@@ -15,15 +15,7 @@ RUN echo ru_RU.UTF-8 UTF-8 >> /etc/locale.gen && locale-gen
 RUN cd /tmp/ \
   && apt-get install -yqq --no-install-recommends openssh-client \
   && /usr/bin/ssh-keygen -A \
-  && apt-get install -yqq -my gnupg wget apt-transport-https \
-## ключ для репозитория froxlor
-#  && echo 'deb http://debian.froxlor.org stretch main' > /etc/apt/sources.list.d/froxlor.list \
-#  && gpg --no-tty --keyserver pool.sks-keyservers.net --recv F6B4A8704F9E9BBC \
-#  && gpg --export --armor F6B4A8704F9E9BBC | apt-key add - \
-  && apt-get update -qqy 
-
-RUN cd /tmp/ \
-  && apt-get -yq install php
+  && apt-get install -yqq -my gnupg wget apt-transport-https php
 
 RUN cd /tmp/ \
 ## установка php5
@@ -35,20 +27,16 @@ RUN cd /tmp/ \
                          php5.6-fpm php5.6-gd php5.6-intl php5.6-mcrypt php5.6-mysql php5.6-soap php5.6-xml \
                          php5.6-zip php5.6-memcache php5.6-memcached php5.6-zip 
 
+# frolor
 RUN cd /tmp/ \
   && apt-get -qy install apt-transport-https lsb-release ca-certificates gnupg \
   && wget -O - https://deb.froxlor.org/froxlor.gpg | apt-key add - \
   && echo "deb https://deb.froxlor.org/debian $(lsb_release -sc) main" > /etc/apt/sources.list.d/froxlor.list \
   && apt-get update -qqy
 
-
-
-
-
 RUN cd /tmp/ \
   && apt-get update -qqy \
 # froxlor
-  && apt-get install -yq froxlor cron php-mbstring php-bcmath php-xml php-zip libnss-extrausers \
   && apt-get install -yq froxlor cron php-mbstring php-bcmath php-xml php-zip libnss-extrausers \
     libnginx-mod-http-geoip libnginx-mod-http-image-filter \
     libnginx-mod-http-subs-filter libnginx-mod-http-upstream-fair \

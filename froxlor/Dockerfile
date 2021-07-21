@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # локаль
 RUN cd /tmp/ \
   && apt-get update -qqy \
-  && apt-get upgrade -qqqy \
+  && apt-get upgrade -qqy \
 # локаль
   && apt-get install -yqq  --no-install-recommends --no-install-suggests locales apt-utils 
 
@@ -17,9 +17,9 @@ RUN cd /tmp/ \
   && /usr/bin/ssh-keygen -A \
   && apt-get install -yqq -my gnupg wget apt-transport-https \
 ## ключ для репозитория froxlor
-  && echo 'deb http://debian.froxlor.org stretch main' > /etc/apt/sources.list.d/froxlor.list \
-  && gpg --no-tty --keyserver pool.sks-keyservers.net --recv F6B4A8704F9E9BBC \
-  && gpg --export --armor F6B4A8704F9E9BBC | apt-key add - \
+#  && echo 'deb http://debian.froxlor.org stretch main' > /etc/apt/sources.list.d/froxlor.list \
+#  && gpg --no-tty --keyserver pool.sks-keyservers.net --recv F6B4A8704F9E9BBC \
+#  && gpg --export --armor F6B4A8704F9E9BBC | apt-key add - \
   && apt-get update -qqy 
 
 RUN cd /tmp/ \
@@ -36,8 +36,19 @@ RUN cd /tmp/ \
                          php5.6-zip php5.6-memcache php5.6-memcached php5.6-zip 
 
 RUN cd /tmp/ \
+  && apt-get -qy install apt-transport-https lsb-release ca-certificates gnupg \
+  && wget -O - https://deb.froxlor.org/froxlor.gpg | apt-key add - \
+  && echo "deb https://deb.froxlor.org/debian $(lsb_release -sc) main" > /etc/apt/sources.list.d/froxlor.list \
+  && apt-get update -qqy
+
+
+
+
+
+RUN cd /tmp/ \
   && apt-get update -qqy \
 # froxlor
+  && apt-get install -yq froxlor cron php-mbstring php-bcmath php-xml php-zip libnss-extrausers \
   && apt-get install -yq froxlor cron php-mbstring php-bcmath php-xml php-zip libnss-extrausers \
     libnginx-mod-http-geoip libnginx-mod-http-image-filter \
     libnginx-mod-http-subs-filter libnginx-mod-http-upstream-fair \
@@ -77,11 +88,11 @@ RUN cd /tmp/ \
   && rm -rf /var/lib/apt/lists/* /tmp/* 
 
 RUN cd /tmp/ \
-  && sed -i -e "s|;upload_tmp_dir =*|upload_tmp_dir = /tmp|"           /etc/php/7.2/fpm/php.ini \
-  && sed -i -e "s|^upload_max_filesize .*|upload_max_filesize = 500M|" /etc/php/7.2/fpm/php.ini \
-  && sed -i -e "s|^max_execution_time .*|max_execution_time = 120|"    /etc/php/7.2/fpm/php.ini \
-  && sed -i -e "s|^post_max_size .*|post_max_size = 128M|"             /etc/php/7.2/fpm/php.ini \
-  && sed -i -e "s|^default_socket_timeout .*|default_socket_timeout = 120|"    /etc/php/7.2/fpm/php.ini 
+  && sed -i -e "s|;upload_tmp_dir =*|upload_tmp_dir = /tmp|"           /etc/php/8.0/fpm/php.ini \
+  && sed -i -e "s|^upload_max_filesize .*|upload_max_filesize = 500M|" /etc/php/8.0/fpm/php.ini \
+  && sed -i -e "s|^max_execution_time .*|max_execution_time = 120|"    /etc/php/8.0/fpm/php.ini \
+  && sed -i -e "s|^post_max_size .*|post_max_size = 128M|"             /etc/php/8.0/fpm/php.ini \
+  && sed -i -e "s|^default_socket_timeout .*|default_socket_timeout = 120|"    /etc/php/8.0/fpm/php.ini 
 
 #  && apt -qqy remove wget gnupg openssh-client curl apt-transport-https ca-certificates \
 #  && apt-get autoremove -qqy 

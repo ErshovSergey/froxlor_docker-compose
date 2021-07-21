@@ -19,7 +19,7 @@ docker-compose up --build -d
 ```
 Команда для удаления контейнеров
 ```
-docker-compose down
+docker-compose down --remove-orphans
 ``` 
 После сборки образа и запуска необходимо включить в настройка froxlor _"Use libnss-extrausers instead of libnss-mysql"_.
 

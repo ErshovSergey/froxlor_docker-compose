@@ -47,7 +47,7 @@ fi
 if [ ! -z "$TZ" ];
 then
   echo "Set timezone to $TZ";
-  sed -i -e "s|;date.timezone =*|date.timezone = $TZ |"           /etc/php/7.0/apache2/php.ini
+  sed -i -e "s|;date.timezone =*|date.timezone = $TZ |"           /etc/php/8.0/apache2/php.ini
 fi
 
 # файл ACL для доступа к доменным именам
